@@ -112,17 +112,20 @@ int main(int argc, char *argv[]) {
 
 	vsse.Init(0);
 
-	vsse.Run(static_cast<double>(mem->len));
-	
-	float simd_sum = mem->sum_final;
+	float simd_sum = 0;
 
-	std::cout << "FINAL SUM: " << simd_sum << std::endl;
-	std::cout << "MegaMults/s: " << vsse.MaxPerf() << std::endl;
+	// Run 10 trials.
+	for (int i = 0; i < 10; i++) {
+		vsse.Run(static_cast<double>(mem->len));
+		float simd_sum = mem->sum_final;
+		mult.Run(static_cast<double>(mem->len));
+	}
 
-	mult.Run(static_cast<double>(mem->len));
+	// std::cout << "FINAL SUM: " << simd_sum << std::endl;
+	// std::cout << "MegaMults/s: " << vsse.MaxPerf() << std::endl;
 
-	std::cout << "FINAL SUM: " << mem->sum_final << std::endl;
-	std::cout << "MegaMults/s: " << mult.MaxPerf() << std::endl;
+	// std::cout << "FINAL SUM: " << mem->sum_final << std::endl;
+	// std::cout << "MegaMults/s: " << mult.MaxPerf() << std::endl;
 
 	float speedup = vsse.MaxPerf() / mult.MaxPerf();
 
